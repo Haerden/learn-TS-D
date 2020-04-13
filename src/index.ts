@@ -1,35 +1,32 @@
 // 装饰器
-function myDecorator() {
-    return function <T extends new (...args: any[]) => any>(constructor: T) {
-        return class extends constructor {
-            name = 'lee';
-            getName() {
-                return this.name;
-            }
-        };
+// 普通方法target => 类的 prototype ; key func 名字
+// 静态方法target => 类的 构造函数 
+function getNameDecorator(target: any, key: string, descriptor: PropertyDescriptor) {
+    console.log(target , key);
+    descriptor.value = function () {
+        return 'descriptor';
     }
 }
 
-
-const Test = myDecorator()(class {
+class Test {
     name: string;
     constructor(name: string) {
         this.name = name;
     }
-});
 
-// @myDecorator()
-// class Test {
-//     name: string;
-//     constructor(name: string) {
-//         this.name = name;
-//     }
-// }
+    @getNameDecorator
+    getName() {
+        return this.name;
+    }
+}
 
 const test1 = new Test(
     'liou'
 );
 
-console.log(test1);
-console.log(test1.getName);
+// test1.getName = ()=> {
+//     return '12';
+// }
+// console.log(test1);
+console.log(test1.getName());
 
